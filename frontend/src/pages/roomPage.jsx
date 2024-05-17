@@ -16,6 +16,7 @@ export const RoomPage = () => {
 
   const apiBase = useSelector((state) => state.toolkit.apiBase);
   const rooms = useSelector((state) => state.toolkit.rooms);
+  const userId = useSelector((state) => state.toolkit.user).id;
 
   const orderStatuses = useSelector((state) => state.toolkit.orderStatuses);
   const dispatch = useDispatch();
@@ -41,13 +42,18 @@ export const RoomPage = () => {
 
   const addCart = (s) => {
     const status = orderStatuses.find((x) => x.name === "В корзине").val;
+    if (!userId || id || status || s) {
+      return;
+    }
     axios
       .post(
         `${apiBase}/orders`,
         {
+          user_id: +userId,
           status: +status,
           hotel_id: +id,
           room_id: +s,
+          status_name: "order",
         },
         { headers: authHeader() }
       )
