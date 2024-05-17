@@ -13,7 +13,9 @@ const Register = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(clearMessage());
+    if (message) {
+      dispatch(clearMessage());
+    }
   }, [dispatch]);
 
   const initialValues = {
@@ -78,7 +80,11 @@ const Register = () => {
                 <div>
                   <div className="mb-3">
                     <label htmlFor="username">Имя пользователя</label>
-                    <Field name="username" type="text" className="form-control" />
+                    <Field
+                      name="username"
+                      type="text"
+                      className="form-control"
+                    />
                     <ErrorMessage
                       name="username"
                       component="div"

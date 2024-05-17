@@ -18,7 +18,9 @@ const Login = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(clearMessage());
+    if (message) {
+      dispatch(clearMessage());
+    }
   }, [dispatch]);
 
   const initialValues = {
@@ -76,7 +78,11 @@ const Login = () => {
               </div>
               <div className="mb-3">
                 <label htmlFor="password">Пароль</label>
-                <Field name="password" type="password" className="form-control" />
+                <Field
+                  name="password"
+                  type="password"
+                  className="form-control"
+                />
                 <ErrorMessage
                   name="password"
                   component="div"

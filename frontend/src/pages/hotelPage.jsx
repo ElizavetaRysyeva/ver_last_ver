@@ -21,11 +21,16 @@ const Component = () => {
   const [selectedStarRatings, setSelectedStarRatings] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedMaxCount, setSelectedMaxCount] = useState([]);
-
-  const hotelsToShow = allHotels.slice(0, visibleCount);
+  let hotelsToShow;
+  if (allHotels && allHotels.length > 0) {
+    hotelsToShow = allHotels.slice(0, visibleCount);
+  }
 
   const fetchData = useCallback(async () => {
     try {
+      if (!apiBase) {
+        return;
+      }
       let params = {};
       let roomParams = {};
       if (sendQuery) {
@@ -101,24 +106,29 @@ const Component = () => {
       </Row>
 
       {/* Фильтры отелей  */}
+
       <Row style={{ paddingBottom: 30 }}>
-        <FilterHotel
-          setSelectedCountry={setSelectedCountry}
-          setSelectedHotelTypes={setSelectedHotelTypes}
-          setSelectedStarRatings={setSelectedStarRatings}
-          selectedStarRatings={selectedStarRatings}
-          selectedMaxCount={selectedMaxCount}
-          setSelectedMaxCount={setSelectedMaxCount}
-        />
+        {allHotels && (
+          <FilterHotel
+            setSelectedCountry={setSelectedCountry}
+            setSelectedHotelTypes={setSelectedHotelTypes}
+            setSelectedStarRatings={setSelectedStarRatings}
+            selectedStarRatings={selectedStarRatings}
+            selectedMaxCount={selectedMaxCount}
+            setSelectedMaxCount={setSelectedMaxCount}
+          />
+        )}
       </Row>
 
       {/* Список отелей */}
-      <HotelList
-        allHotels={allHotels}
-        hotelsToShow={hotelsToShow}
-        visibleCount={visibleCount}
-        setVisibleCount={setVisibleCount}
-      />
+      {allHotels && (
+        <HotelList
+          allHotels={allHotels}
+          hotelsToShow={hotelsToShow}
+          visibleCount={visibleCount}
+          setVisibleCount={setVisibleCount}
+        />
+      )}
     </div>
   );
 };
