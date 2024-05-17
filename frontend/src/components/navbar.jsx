@@ -42,6 +42,9 @@ const Component = () => {
             <Nav.Link as={Link} to="/">
               Главная страница
             </Nav.Link>
+            <Nav.Link as={Link} to="/guide">
+              Руководство пользователя
+            </Nav.Link>
           </Nav>
           <Footer />
           <Nav className="ms-auto">
@@ -68,7 +71,7 @@ const Component = () => {
                   Войти
                 </Nav.Link>
                 <Nav.Link as={Link} to="/register">
-                  Зерегистрироваться
+                  Зарегистрироваться
                 </Nav.Link>
               </>
             )}

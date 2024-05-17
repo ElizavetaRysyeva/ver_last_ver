@@ -12,6 +12,8 @@ import Profile from "./components/profile";
 import Admin from "./components/admin";
 import { RoomPage } from "./pages/roomPage";
 
+import Guide from "./components/guide";
+
 function App() {
   return (
     <Provider store={store}>
@@ -27,6 +29,9 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
           <Route path="*" element={<Page404 />} />
+
+          <Route path="guide" element={<Guide />} />    
+
         </Routes>
       </Layout>
     </Provider>
