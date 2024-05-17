@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 
   // Create a Order
   const obj = {
-    user_id: req.user_id,
+    user_id: req.userId,
     hotel_id: req.body.hotel_id,
     room_id: req.body.room_id,
     status: req.body.status,

@@ -18,6 +18,7 @@ const Component = () => {
 
   const exit = () => {
     dispatch(logout());
+    window.location.reload();
   };
 
   return (

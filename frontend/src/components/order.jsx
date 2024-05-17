@@ -35,6 +35,10 @@ const Component = () => {
       });
   }, [apiBase, dispatch]);
 
+  if (!isLoggedIn) {
+    return <Navigate to="/" />;
+  }
+
   const addCart = (s) => {
     const status = orderStatuses.find((x) => x.name === "В корзине").val;
     axios

@@ -16,7 +16,8 @@ export const RoomPage = () => {
 
   const apiBase = useSelector((state) => state.toolkit.apiBase);
   const rooms = useSelector((state) => state.toolkit.rooms);
-  const userId = useSelector((state) => state.toolkit.user).id;
+  const user = useSelector((state) => state.toolkit.user);
+  const isLoggedIn = useSelector((state) => state.toolkit.isLoggedIn);
 
   const orderStatuses = useSelector((state) => state.toolkit.orderStatuses);
   const dispatch = useDispatch();
@@ -38,18 +39,21 @@ export const RoomPage = () => {
       .then((resp) => {
         dispatch(setOrderStatuses(resp.data));
       });
+
+    console.log("id", id);
   }, [apiBase, dispatch, id]);
 
   const addCart = (s) => {
     const status = orderStatuses.find((x) => x.name === "В корзине").val;
-    if (!userId || id || status || s) {
+    if (!id || !status || !s || !isLoggedIn || !user.id) {
       return;
     }
+
     axios
       .post(
         `${apiBase}/orders`,
         {
-          user_id: +userId,
+          user_id: +user.id,
           status: +status,
           hotel_id: +id,
           room_id: +s,

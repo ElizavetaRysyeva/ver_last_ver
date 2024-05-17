@@ -22,8 +22,12 @@ const Profile = () => {
   const orders = useSelector((state) => state.toolkit.orders);
   const orderStatuses = useSelector((state) => state.toolkit.orderStatuses);
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.toolkit.isLoggedIn);
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
     axios.get(`${apiBase}/orders`, { headers: authHeader() }).then((resp) => {
       dispatch(setOrders(resp.data));
     });

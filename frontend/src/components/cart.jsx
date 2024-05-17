@@ -26,10 +26,11 @@ const Component = () => {
   const dispatch = useDispatch();
 
   const isLoggedIn = useSelector((state) => state.toolkit.isLoggedIn);
-  const user = useSelector((state) => state.toolkit.user);
-  const isAdmin = user?.roles?.indexOf("ROLE_ADMIN") > -1;
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
     axios.get(`${apiBase}/orders`, { headers: authHeader() }).then((resp) => {
       dispatch(setOrders(resp.data));
     });
@@ -49,11 +50,14 @@ const Component = () => {
     });
   }, [apiBase, dispatch]);
 
-  if (!isLoggedIn || isAdmin) {
+  if (!isLoggedIn) {
     return <Navigate to="/" />;
   }
 
   const deleteCart = (id) => {
+    if (!isLoggedIn || !id) {
+      return;
+    }
     axios
       .delete(`${apiBase}/orders/${id}`, { headers: authHeader() })
       .then((resp) => {
@@ -61,12 +65,17 @@ const Component = () => {
       });
   };
   const payCart = () => {
+    if (!isLoggedIn) {
+      return;
+    }
+
     const ordersInCart = orders.filter((x) => x.status === 1);
 
     for (const oic of ordersInCart) {
       const id = oic.id;
       const tmp = { ...oic };
       tmp.status = 2;
+      tmp.status_name = "pay";
       axios
         .put(`${apiBase}/orders/${id}`, tmp, { headers: authHeader() })
         .then((resp) => {
