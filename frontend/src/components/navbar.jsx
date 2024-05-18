@@ -44,7 +44,7 @@ const Component = () => {
               Главная страница
             </Nav.Link>
             <Nav.Link as={Link} to="/guide">
-              Руководство пользователя
+              Краткое руководство оператора
             </Nav.Link>
           </Nav>
           <Footer />
