@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+numpy
+pandas
+matplotlib
+tensorflow
+scikit-learn
+nltk
+xgboost
+scikit-surprise==1.1.1  # Совместимая версия для Python 3.9
+openpyxl
