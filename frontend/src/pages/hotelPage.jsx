@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-
 import { useCallback, useEffect, useState } from "react";
 import { FilterHotel } from "../components/hotels/FilterHotel";
 import { HotelList } from "../components/hotels/HotelList";
@@ -102,6 +101,7 @@ const Component = () => {
           setQuery={setQuery}
           setSendQuery={setSendQuery}
           fetchData={fetchData}
+          apiBase={apiBase} // Передаем apiBase в FindHotel
         />
       </Row>
 
