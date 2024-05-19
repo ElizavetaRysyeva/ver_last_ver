@@ -1,5 +1,6 @@
 // import React from "react";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
@@ -10,34 +11,39 @@ import three from "./actives/3stars.png";
 import two from "./actives/2stars.png";
 import one from "./actives/1stars.png";
 
+import authHeader from "/Users/liza/Downloads/hotel-hotel-latest/frontend/src/services/auth-header.js";
+
+import addOrder from "/Users/liza/Downloads/hotel-hotel-latest/frontend/src/components/reducerSlice.js";
+
 
 
 export const FindHotel = (params) => {
   const { query, setQuery, setSendQuery, fetchData, apiBase } = params;
   const [hotel, setHotels] = useState([]);
-  const {
-
-    setSelectedCountry,
-    setSelectedMaxCount,
-  } = params
+  // const {
+  //   setSelectedCountry,
+  //   setSelectedMaxCount,
+  // } = params
+  const isLoggedIn = useSelector((state) => state.toolkit.isLoggedIn);
+  const user = useSelector((state) => state.toolkit.user);
+  const isAdmin = user?.roles?.indexOf("ROLE_ADMIN") > -1;
 
   const handleFindHotel = async () => {
     try {
       // Сделайте POST-запрос к вашему FastAPI серверу
-      // const response = await axios.post(`http://localhost:8000/recommendations/`, {
-      //   country: "Italy", // Укажите нужные параметры
-      //   number: 1, // Укажите нужные параметры
-      //   features: query,
-      // });
-      // const country = document.getElementById("countryInput").value; // Получаем значение страны из поля ввода
-      // const number = parseInt(document.getElementById("numberInput").value); // Получаем значение числа из поля ввода
-
-      const response = await axios.post('http://localhost:8000/recommendations/', {
-        country: setSelectedCountry,
-        number: setSelectedMaxCount,
-  
+      const response = await axios.post(`http://localhost:8000/recommendations/`, {
+        country: "Italy", // Укажите нужные параметры
+        number: 1, // Укажите нужные параметры
         features: query,
       });
+
+// пробовала передавать функции - не выходит 
+      // const response = await axios.post('http://localhost:8000/recommendations/', {
+      //   country: setSelectedCountry,
+      //   number: setSelectedMaxCount,
+  
+      //   features: query,
+      // });
 
       console.log(response.data); // Выводим результат в консоль
       setSendQuery(query);
@@ -48,8 +54,29 @@ export const FindHotel = (params) => {
     }
   };
 
+  const orderStatuses = useSelector((state) => state.toolkit.orderStatuses);
+  const dispatch = useDispatch();
+
+
+  const addCart = (hotelId, roomId) => {
+    const status = orderStatuses.find((x) => x.name === "В корзине").val;
+    axios
+      .post(
+        '${apiBase}/orders',
+        {
+          status: +status,
+          hotel_id: +hotelId,
+          room_id: +roomId,
+        },
+        { headers: authHeader() }
+      )
+      .then((resp) => {
+        dispatch(addOrder(resp.data));
+      });
+  };
+
   return (
-    <Row>
+    <Row xs={1} md={3} className="g-4">
    <Col xs={10} md={10}>
         <Form.Group className="mb-3">
           <Form.Control
@@ -73,8 +100,8 @@ export const FindHotel = (params) => {
         </Form.Group>
       </Col>
   {hotel.map((hotel) => (
-    <Col key={hotel.id}>
-      <Card style={{ height: "100%" }} key={hotel.id}>
+    <Col key={hotel.hotel_id}>
+      <Card style={{ height: "100%" }} key={hotel.hotel_id}>
         <Card.Img
           style={{
             height: "100%",
@@ -148,12 +175,25 @@ export const FindHotel = (params) => {
             Описание номера: {hotel.description}
             <p>Стоимость: {hotel.price} руб/сутки</p>
           </Card.Text>
+          <Card.Text style={{ textAlign: `center` }}>
+            {isLoggedIn && !isAdmin && (
+            <Button
+              key={hotel.hotel_id}
+              variant="outline-primary"
+              className="m-1"
+              onClick={() => {
+                addCart(hotel.hotel_id);
+              }}
+              >
+                Забронировать номер
+            </Button>
+                      )}
+          </Card.Text>
         </Card.Body>
       </Card>
     </Col>
   ))}
 </Row>
-
 
   );
 };
